@@ -1,6 +1,7 @@
 import express from 'express';
+import bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
-// import UserModel from './database/models/user.model';
+import UserModel from './database/models/user.model';
 import ProductModel from './database/models/product.model';
 import OrderModel from './database/models/order.model';
 
@@ -8,7 +9,7 @@ const app = express();
 
 app.use(express.json());
 
-// const secret = process.env.JWT_SECRET || 'SECRET';
+const secret = process.env.JWT_SECRET || 'SECRET';
 
 app.post('/products', async (req, res) => {
   const { name, price, orderId } = req.body;
@@ -34,45 +35,42 @@ app.get('/orders', async (req, res) => {
       model: ProductModel,
       as: 'productIds',
       attributes: ['id'],
-    //   raw: true, // Retorna apenas os dados brutos, sem os metadados do Sequelize
     },
-    raw: true,
 
   });
 
-  return res.status(200).json(ordersList);
+  const finalList = ordersList.map(({ dataValues }) => ({
+    id: dataValues.id,
+    userId: dataValues.userId,
+    productIds: dataValues.productIds?.map((product) => product.id),
+  }));
+
+  return res.status(200).json(finalList);
 });
 
-// app.post('/login', async (req, res) => {
-//   const { username, password } = req.body;
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
 
-//   if (!username) {
-//     return res.status(400).json({ message: 'username and password are required' });
-//   }
-//   if (!password) {
-//     return res.status(400).json({ message: 'username and password are required' });
-//   }
+  if (!username || !password) {
+    return res.status(400).json({ message: 'username and password are required' });
+  }
 
-//   const userFound = await UserModel.findOne({
-//     where: {
-//       username,
-//     },
-//   });
+  const userFound = await UserModel.findOne({ where: { username } });
 
-//   if (!userFound) {
-//     return res.status(401).json({ message: 'Username or password invalid' });
-//   }
-//   if (!password) {
-//     return res.status(401).json({ message: 'Username or password invalid' });
-//   }
+  if (!userFound) {
+    return res.status(401).json({ message: 'Username or password invalid' });
+  }
 
-//   const token = jwt.sign({
-//     id: userFound.dataValues.id,
-//     username: userFound.dataValues.username,
+  const passwordMatch = bcrypt.compareSync(password, userFound.dataValues.password);
 
-//   }, secret);
+  if (!passwordMatch) {
+    return res.status(401).json({ message: 'Username or password invalid' });
+  }
 
-//   return res.status(200).json({ token });
-// });
+  const token = jwt.sign({id: userFound.dataValues.id,
+    username: userFound.dataValues.username }, secret);
+
+  return res.status(200).json({ token });
+});
 
 export default app;
