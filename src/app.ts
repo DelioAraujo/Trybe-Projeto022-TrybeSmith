@@ -21,6 +21,12 @@ app.post('/products', async (req, res) => {
   return res.status(201).json(createProduct.dataValues);
 });
 
+app.get('/products', async (req, res) => {
+  const productsList = await ProductModel.findAll();
+
+  return res.status(200).json(productsList);
+});
+
 // app.post('/login', async (req, res) => {
 //   const { username, password } = req.body;
 
