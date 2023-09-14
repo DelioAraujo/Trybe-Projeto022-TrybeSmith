@@ -2,6 +2,7 @@ import express from 'express';
 import * as jwt from 'jsonwebtoken';
 // import UserModel from './database/models/user.model';
 import ProductModel from './database/models/product.model';
+import OrderModel from './database/models/order.model';
 
 const app = express();
 
@@ -25,6 +26,21 @@ app.get('/products', async (req, res) => {
   const productsList = await ProductModel.findAll();
 
   return res.status(200).json(productsList);
+});
+
+app.get('/orders', async (req, res) => {
+  const ordersList = await OrderModel.findAll({
+    include: {
+      model: ProductModel,
+      as: 'productIds',
+      attributes: ['id'],
+    //   raw: true, // Retorna apenas os dados brutos, sem os metadados do Sequelize
+    },
+    raw: true,
+
+  });
+
+  return res.status(200).json(ordersList);
 });
 
 // app.post('/login', async (req, res) => {
