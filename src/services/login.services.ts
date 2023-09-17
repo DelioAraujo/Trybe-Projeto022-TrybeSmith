@@ -9,7 +9,7 @@ const login = async (username: string, password: string): Promise<Loginservicere
   if (!username || !password) {
     return {
       status: 400,
-      message: 'username and password are required',
+      message: '"username" and "password" are required',
     };
   }
 

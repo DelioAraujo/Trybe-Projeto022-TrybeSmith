@@ -17,7 +17,7 @@ describe('POST /login', function () {
     const loginResponse = await chai.request(app).post('/login').send(reqBody);
 
     expect(loginResponse.status).to.equal(400);
-    expect(loginResponse.body).to.be.deep.equal({message: 'username and password are required'})
+    expect(loginResponse.body).to.be.deep.equal({message: '"username" and "password" are required'})
 
   });
 
@@ -27,7 +27,7 @@ describe('POST /login', function () {
     const loginResponse = await chai.request(app).post('/login').send(reqBody);
 
     expect(loginResponse.status).to.equal(400);
-    expect(loginResponse.body).to.be.deep.equal({message: 'username and password are required'})
+    expect(loginResponse.body).to.be.deep.equal({message: '"username" and "password" are required'})
 
   });
 

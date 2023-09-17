@@ -14,7 +14,7 @@ describe('LoginService', function () {
 
     expect(loginData).to.deep.equal({
       status: 400,
-      message: 'username and password are required',
+      message: '"username" and "password" are required',
     });
 
   });
@@ -26,7 +26,7 @@ describe('LoginService', function () {
 
     expect(loginData).to.deep.equal({
       status: 400,
-      message: 'username and password are required',
+      message: '"username" and "password" are required',
     });
 
   });
