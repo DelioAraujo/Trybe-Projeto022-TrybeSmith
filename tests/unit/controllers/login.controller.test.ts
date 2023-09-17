@@ -17,17 +17,5 @@ describe('LoginController', function () {
     sinon.restore();
   });
 
-  // it('retorna erro se corpo sem username', async function () {
-
-  //   sinon.stub(loginServices, 'login').resolves({
-  //     status: 400,
-  //     message: 'username and password are required',
-  //   });
-
-
-
-  //   expect(res.status).to.have.been.calledWith(400);
-  //   expect(res.json).to.have.been.calledWith({ message: messageUsernameOrPasswordEmpty });
-  // })
 
 });
